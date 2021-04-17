@@ -1,16 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
+
+class teacher;
+
 class csv
 {
 private:
-    string file;
+    vector<vector<string>> data;
+    // [
+    //     ["name","100","50"],
+    //     ["name1","50","100"],
+    // ]
     void update(int row, int col)
     {
     }
-    void add()
+    void add(int roll)
     {
     }
-    void del(int row)
+    void del(int roll)
+    {
+    }
+    void flush()
     {
     }
 
@@ -24,34 +34,42 @@ public:
     void read()
     {
     }
-    // friend teacher;
+    friend class teacher;
 };
-class teacher : public csv
+
+class teacher
 {
+private:
+    string name;
+    string password;
 public:
+    static csv students;
+    static csv teachers;
     teacher(string name, string password)
     {
     }
-    void add_marks(string name, string student)
+    void add_marks(int roll, string sub_name, int marks)
     {
     }
-    void add_student(string name)
+    void add_student(int roll)
     {
     }
-    void del_student(string name)
+    void del_student(int roll)
     {
     }
 };
-class parent : public csv
+
+class parent
 {
 public:
-    parent(string name, string password)
+    parent(int student_roll, string password)
     {
     }
     void print_report()
     {
     }
 };
+
 int main()
 {
     string greeting = "\tWelcome To lorem ipsum\n\
