@@ -141,8 +141,8 @@ public:
     {
         students.del(roll);
     }
-    void print_all_details(){
-        
+    void print_all_details()
+    {
     }
 };
 
@@ -150,6 +150,7 @@ class parent
 {
 public:
     vector<string> data;
+    parent() {}
     parent(int student_roll, string password)
     {
         vector<string> temp_vec = input(students.read(student_roll));
@@ -197,6 +198,7 @@ int main()
     string subject_name;
     string name;
     teacher t1;
+    parent p1;
 
     switch (choice)
     {
@@ -295,29 +297,53 @@ int main()
             cout << "the roll number of the student you entered is : " << roll << endl;
             break;
         case 3:
-            
-            while(true){
-                cout<< "enter the name of the student you wish to delete : ";
-                cin>>roll;
-                try{
+
+            while (true)
+            {
+                cout << "enter the name of the student you wish to delete : ";
+                cin >> roll;
+                try
+                {
                     t1.del_student(roll);
                 }
-                catch(int a){
-                    if(a == 1){
-                        cout<<"the roll number you have entered does not exists"<<endl;
+                catch (int a)
+                {
+                    if (a == 1)
+                    {
+                        cout << "the roll number you have entered does not exists" << endl;
                         continue;
                     }
                 }
                 break;
             }
-            cout<<"student with roll "<<roll<<" was deleted"<<endl;
+            cout << "student with roll " << roll << " was deleted" << endl;
             break;
         case 4:
+            t1.print_all_details();
             break;
         }
         break;
     case 2:
         //login as parent
+        while (true)
+        {
+            try
+            {
+                cout << "enter roll number : ";
+                cin >> roll;
+                cout << "enter the password : ";
+                cin >> password;
+                p1 = parent(roll, password);
+            }
+            catch(int a){
+                if(a==1){
+                    cout<<"roll number of password are invalid"<<endl;
+                }
+            }
+            break;
+        }
+        cout<<"here is the report of your ward"<<endl;
+        p1.print_report();
         break;
     }
 }
