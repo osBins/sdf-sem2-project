@@ -58,8 +58,9 @@ public:
     void update(int row, int col)
     {
     }
-    void add(string name)
+    int add(string name)
     {
+
     }
     void del(int roll)
     {
@@ -83,11 +84,12 @@ class teacher
 {
 private:
     string name;
+    int rollNum;
     string password;
 
 public:
     teacher() {}
-    teacher(string nm, string p)
+    teacher(int nm, string p)
     {
         csv obj1;
         int i, j, c = 0, row;
@@ -95,7 +97,7 @@ public:
         {
             for (j = 0; j < obj1.data.size(); j++)
             {
-                if (obj1.data[i][j] == nm)
+                if (obj1.data[i][j] == to_string(nm))
                 {
                     c = 1;
                     row = i;
@@ -133,9 +135,9 @@ public:
             obj.data[row][col] = marks;
         }
     }
-    void add_student(string name)
+    int add_student(string name)
     {
-        students.add(name);
+        return students.add(name);
     }
     void del_student(int roll)
     {
