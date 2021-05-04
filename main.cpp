@@ -51,33 +51,77 @@ class csv
 {
 public:
     vector<vector<string>> data;
+    string filename;
     // [
     //     ["name","100","50"],
     //     ["name1","50","100"],
     // ]
-    void update(int row, int col)
+    void update(int row, int col, int marks)
     {
+        data[row][col] = to_string(marks);
     }
     int add(string name)
     {
-
+        string str;
+        int roll = stoi(data[data.size()-1][0]) + 1;
+        str+= to_string(roll);
+        str+= "," + name;
+        string pass;
+        cout << "Enter password : ";
+        cin >> pass;
+        str += "," + pass + ",,,,,";
+        data.push_back(input(str));
     }
-    void del(int roll)
-    {
-    }
+    // void del(int roll)
+    // {
+    // }
     void flush()
     {
+         ofstream data1(filename);
+        for(int i=0; i < data.size(); i++){
+            for(int j=0; j < data[i].size(); j++)
+            {
+                data1 << data[i][j] << ","; 
+            }
+            data1 << endl;
+        }
     }
     csv()
     {
     }
     csv(string file)
     {
+        ifstream data1(file);
+        filename=file;
+        while(data1.eof()!=1)
+        {
+            string o;
+            getline(data1, o);
+            data.push_back(input(o));
+        }
+    }
+    ~csv()
+    {
+        flush();
     }
     string read(int roll)
     {
+        for(int i = 0; i<data.size(); i++)
+        {
+            if(data[i][0] == to_string(roll))
+            {
+                string str;
+                str += data[i][0] + "," + data[i][1];
+                for(int j = 3; j < 8; j++)
+                {
+                    str += data[i][j] + ",";
+                }
+                str.pop_back();
+                return str; 
+            }
+        }
+        return string();
     }
-    friend class teacher;
 };
 
 class teacher
@@ -131,18 +175,18 @@ public:
                 if (obj.data[i][j] == sub_name)
                     col = j;
             }
-            students.update(row, col);
-            obj.data[row][col] = marks;
+            students.update(row, col, marks);
+            // obj.data[row][col] = marks;
         }
     }
     int add_student(string name)
     {
         return students.add(name);
     }
-    void del_student(int roll)
-    {
-        students.del(roll);
-    }
+    // void del_student(int roll)
+    // {
+    //     students.del(roll);
+    // }
     void print_all_details()
     {
     }
