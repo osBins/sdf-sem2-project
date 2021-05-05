@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<string> student_vector = {"roll", "name", "parent_name", "password", "math", "physics", "chemistry", "computer", "english"};
+vector<string> student_vector = {"roll", "name", "password", "math", "physics", "chemistry", "computer", "english"};
 
 vector<string> input(string line)
 {
@@ -52,10 +52,6 @@ class csv
 public:
     vector<vector<string>> data;
     string filename;
-    // [
-    //     ["name","100","50"],
-    //     ["name1","50","100"],
-    // ]
     void update(int row, int col, int marks)
     {
         data[row][col] = to_string(marks);
@@ -63,27 +59,31 @@ public:
     int add(string name)
     {
         string str;
-        int roll = stoi(data[data.size()-1][0]) + 1;
-        str+= to_string(roll);
-        str+= "," + name;
+        int roll = stoi(data[data.size() - 1][0]) + 1;
+        str += to_string(roll);
+        str += "," + name;
         string pass;
         cout << "Enter password : ";
         cin >> pass;
         str += "," + pass + ",,,,,";
         data.push_back(input(str));
+        return roll;
     }
-    // void del(int roll)
-    // {
-    // }
     void flush()
     {
-         ofstream data1(filename);
-        for(int i=0; i < data.size(); i++){
-            for(int j=0; j < data[i].size(); j++)
+        ofstream data1(filename);
+        for (int i = 0; i < data.size(); i++)
+        {
+            for (int j = 0; j < data[i].size(); j++)
             {
-                data1 << data[i][j] << ","; 
+                data1 << data[i][j];
+                if (j != data[i].size() - 1)
+                {
+                    data1 << ",";
+                }
             }
-            data1 << endl;
+            if (i != data.size() - 1)
+                data1 << endl;
         }
     }
     csv()
@@ -92,8 +92,9 @@ public:
     csv(string file)
     {
         ifstream data1(file);
-        filename=file;
-        while(data1.eof()!=1)
+        filename = file;
+        cout << "filename:" << file << endl;
+        while (data1.eof() != 1)
         {
             string o;
             getline(data1, o);
@@ -106,18 +107,18 @@ public:
     }
     string read(int roll)
     {
-        for(int i = 0; i<data.size(); i++)
+        for (int i = 0; i < data.size(); i++)
         {
-            if(data[i][0] == to_string(roll))
+            if (data[i][0] == to_string(roll))
             {
                 string str;
                 str += data[i][0] + "," + data[i][1];
-                for(int j = 3; j < 8; j++)
+                for (int j = 3; j < 8; j++)
                 {
                     str += data[i][j] + ",";
                 }
                 str.pop_back();
-                return str; 
+                return str;
             }
         }
         return string();
@@ -133,62 +134,48 @@ private:
 
 public:
     teacher() {}
-    teacher(int nm, string p)
+    teacher(int nm, string p, csv &obj1)
     {
-        csv obj1;
         int i, j, c = 0, row;
         for (i = 0; i < obj1.data.size(); i++)
         {
-            for (j = 0; j < obj1.data.size(); j++)
+            cout << obj1.data[i][0] << " " << obj1.data[i][2] << endl;
+            if (obj1.data[i][0] == to_string(nm) && obj1.data[i][2] == p)
             {
-                if (obj1.data[i][j] == to_string(nm))
+                return;
+            }
+        }
+    }
+    void add_marks(int roll, string sub_name, int marks, csv &students)
+    {
+        int i, j, row, col;
+        for (i = 0; i < students.data.size(); i++)
+        {
+            cout<<"inside"<<endl;
+            if (students.data[i][0] == to_string(roll))
+            {
+                cout<<"found rollno"<<endl;
+                for (int j = 0; j < student_vector.size(); j++)
                 {
-                    c = 1;
-                    row = i;
-                    break;
+                    if (student_vector[j] == sub_name)
+                    {
+                        row = i;
+                        col = j;
+                        students.update(row, col, marks);
+                        return;
+                    }
                 }
             }
         }
-        if (c == 1)
-        {
-            for (i = 0; i < obj1.data.size(); i++)
-            {
-                if (obj1.data[row][i] == p)
-                    c = 1;
-            }
-            if (c == 1)
-                cout << "VALID" << endl;
-        }
-        else
-            cout << "NOT VALID" << endl;
+        throw 1;
     }
-    void add_marks(int roll, string sub_name, int marks)
-    {
-        csv obj;
-        int i, j, row, col;
-        for (i = 0; i < obj.data.size(); i++)
-        {
-            for (j = 0; j < obj.data.size(); j++)
-            {
-                if (stoi(obj.data[i][j]) == roll)
-                    row = i;
-                if (obj.data[i][j] == sub_name)
-                    col = j;
-            }
-            students.update(row, col, marks);
-            // obj.data[row][col] = marks;
-        }
-    }
-    int add_student(string name)
+    int add_student(string name, csv &students)
     {
         return students.add(name);
     }
-    // void del_student(int roll)
-    // {
-    //     students.del(roll);
-    // }
     void print_all_details()
     {
+        cout << "print_all_details";
     }
 };
 
@@ -197,26 +184,39 @@ class parent
 public:
     vector<string> data;
     parent() {}
-    parent(int student_roll, string password)
+    parent(int student_roll, string password, csv &students)
     {
-        vector<string> temp_vec = input(students.read(student_roll));
-        if (temp_vec[3] == password)
+        for (int i = 0; i < students.data.size(); i++)
         {
-            data = temp_vec;
-        }
-        else
-        {
-            throw 1;
+            if (students.data[i][0] == to_string(student_roll) && students.data[i][2] == password)
+            {
+                data = students.data[i];
+            }
         }
     }
     void print_report()
     {
-        cout << vec_to_string(student_vector) << endl;
-        cout << vec_to_string(data) << endl;
+        int i = 0;
+        cout << "|";
+        for (; i < student_vector.size(); i++)
+        {
+            if (i != 2)
+                printf("%10s|", student_vector[i].data());
+        }
+        cout << endl;
+        cout << "|";
+        for (i = 0; i < data.size(); i++)
+        {
+            if (i != 2)
+            {
+                printf("%10s|", data[i].data());
+            }
+        }
+        cout << endl;
     }
 };
-csv students;
-csv teachers;
+csv students("students.csv");
+csv teachers("teachers.csv");
 int main()
 {
     string greeting = "\tWelcome To lorem ipsum\n\
@@ -227,14 +227,14 @@ int main()
     while (true)
     {
         cin >> choice;
-        if (choice != 1 || choice != 2)
+        if (choice == 1 || choice == 2)
         {
-            cout << "please select from 1 or 2" << endl;
-            continue;
+            break;
         }
         else
         {
-            break;
+            cout << "please select from 1 or 2" << endl;
+            continue;
         }
     }
 
@@ -257,7 +257,8 @@ int main()
                 cin >> roll;
                 cout << "please enter your password : ";
                 cin >> password;
-                t1 = teacher(roll, password);
+                // cout<<password<<" "<<roll;
+                t1 = teacher(roll, password, teachers);
             }
             catch (int err)
             {
@@ -273,101 +274,75 @@ int main()
                     }
                 }
             }
+            break;
         }
         while (true)
         {
             cout << "please select from the following options" << endl
                  << "1. Add marks" << endl
                  << "2. Add new student" << endl
-                 << "3. Remove a student" << endl
                  << "4. View all students" << endl
                  << ">>";
             int choice;
             cin >> choice;
-            if (choice > 4 || choice < 1)
+            switch (choice)
             {
-                cout << "invalid choice, please pick once more" << endl;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        switch (choice)
-        {
-        case 1:
-            while (true)
-            {
-                cout << "enter roll number :";
-                cin >> roll;
-                cout << "enter subject name :";
-                cin >> subject_name;
-                cout << "enter marks :";
-                cin >> marks;
-                if (marks > 100 || marks < 0)
+            case 1:
+                while (true)
                 {
-                    cout << "marks cannot be less than 0 or greater than 100" << endl;
-                    continue;
-                }
-                else if (search(student_vector, subject_name) == -1)
-                {
-                    cout << "please enter a valid subject name from the following" << endl;
-                    for (int i = 4; i < 9; i++)
+                    cout << "enter roll number :";
+                    cin >> roll;
+                    cout << "enter subject name :";
+                    cin >> subject_name;
+                    cout << "enter marks :";
+                    cin >> marks;
+                    if (marks > 100 || marks < 0)
                     {
-                        cout << student_vector[i];
-                    }
-                    cout << endl;
-                    continue;
-                }
-                try
-                {
-                    t1.add_marks(roll, subject_name, marks);
-                }
-                catch (int a)
-                {
-                    if (a == 1)
-                    {
-                        cout << "the roll number you entered does not exists" << endl;
+                        cout << "marks cannot be less than 0 or greater than 100" << endl;
                         continue;
                     }
-                }
-                cout << "marks were added successfully" << endl;
-                break;
-            }
-            break;
-        case 2:
-            cout << "enter the name of the student you wish to add : ";
-            cin >> name;
-            roll = t1.add_student(name);
-            cout << "the roll number of the student you entered is : " << roll << endl;
-            break;
-        case 3:
-
-            while (true)
-            {
-                cout << "enter the name of the student you wish to delete : ";
-                cin >> roll;
-                try
-                {
-                    t1.del_student(roll);
-                }
-                catch (int a)
-                {
-                    if (a == 1)
+                    else if (search(student_vector, subject_name) == -1)
                     {
-                        cout << "the roll number you have entered does not exists" << endl;
+                        cout << "please enter a valid subject name from the following" << endl;
+                        for (int i = 4; i < 9; i++)
+                        {
+                            cout << student_vector[i] << " ";
+                        }
+                        cout << endl;
                         continue;
                     }
+                    try
+                    {
+                        t1.add_marks(roll, subject_name, marks, students);
+                    }
+                    catch (int a)
+                    {
+                        if (a == 1)
+                        {
+                            cout << "the roll number you entered does not exists" << endl;
+                            continue;
+                        }
+                    }
+                    cout << "marks were added successfully" << endl;
+                    break;
                 }
                 break;
+            case 2:
+                cout << "enter the name of the student you wish to add : ";
+                cin >> name;
+                roll = t1.add_student(name, students);
+                cout << "the roll number of the student you entered is : " << roll << endl;
+                break;
+            case 4:
+                t1.print_all_details();
+                break;
+            default:
+                continue;
+                break;
             }
-            cout << "student with roll " << roll << " was deleted" << endl;
-            break;
-        case 4:
-            t1.print_all_details();
             break;
         }
+
         break;
     case 2:
         //login as parent
@@ -379,16 +354,18 @@ int main()
                 cin >> roll;
                 cout << "enter the password : ";
                 cin >> password;
-                p1 = parent(roll, password);
+                p1 = parent(roll, password, students);
             }
-            catch(int a){
-                if(a==1){
-                    cout<<"roll number of password are invalid"<<endl;
+            catch (int a)
+            {
+                if (a == 1)
+                {
+                    cout << "roll number or password are invalid" << endl;
                 }
             }
             break;
         }
-        cout<<"here is the report of your ward"<<endl;
+        cout << "here is the report of your ward" << endl;
         p1.print_report();
         break;
     }

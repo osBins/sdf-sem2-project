@@ -1,2 +1,3 @@
-roll,name,parent_name,password,math,physics,chemistry,computer,english
-1,test name,test parent_name,test password, 70, 80, 90, 100, 50
+roll,name,password,math,physics,chemistry,computer,english
+1,test name,test_password,2, 80, 90, 100, 50
+2,student2,pass,20,,70,,
