@@ -133,20 +133,21 @@ private:
     string password;
 
 public:
-    teacher() {}
+
+    teacher() {};
     teacher(int nm, string p, csv &obj1)
     {
         int i, j, c = 0, row;
         for (i = 0; i < obj1.data.size(); i++)
         {
-            cout << obj1.data[i][0] << " " << obj1.data[i][2] << endl;
             if (obj1.data[i][0] == to_string(nm) && obj1.data[i][2] == p)
             {
                 return;
             }
         }
+        throw 1;
     }
-    void add_marks(int roll, string sub_name, int marks, csv &students)
+    void add_marks(int roll, string sub_name, int marks, csv students)
     {
         int i, j, row, col;
         for (i = 0; i < students.data.size(); i++)
@@ -175,7 +176,36 @@ public:
     }
     void print_all_details()
     {
-        cout << "print_all_details";
+         int i = 0;
+        cout << "|";
+        for (; i < student_vector.size(); i++)
+        {
+            if (i != 2)
+                printf("%10s|", student_vector[i].data());
+        }
+        cout << endl;
+        vector<string>data1;
+        ifstream s_file;
+    string line,word;
+   s_file.open("students.csv");
+     while(!s_file.eof()){
+         getline(s_file, line);
+        stringstream sent(line);
+          while (getline(sent, word,',')) {
+            data1.push_back(word);
+        }
+            cout << "|";
+            int i;
+        for (i = 0; i<data1.size(); i++)
+        {
+            if (i != 2)
+            {
+                printf("%10s|",data1[i].data());
+            }
+        }
+        data1.clear();
+        cout << endl;
+    }
     }
 };
 
@@ -191,8 +221,10 @@ public:
             if (students.data[i][0] == to_string(student_roll) && students.data[i][2] == password)
             {
                 data = students.data[i];
+                return;
             }
         }
+        throw 1;
     }
     void print_report()
     {
@@ -214,6 +246,7 @@ public:
         }
         cout << endl;
     }
+
 };
 csv students("students.csv");
 csv teachers("teachers.csv");
@@ -271,6 +304,9 @@ int main()
                     if (choice == 'n')
                     {
                         break;
+                    }
+                    else{
+                        continue;
                     }
                 }
             }
@@ -361,6 +397,7 @@ int main()
                 if (a == 1)
                 {
                     cout << "roll number or password are invalid" << endl;
+                    continue;
                 }
             }
             break;
