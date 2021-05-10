@@ -1,3 +1,6 @@
-roll,name,password,math,physics,chemistry,computer,english
-1,test name,test_password,2, 80, 90, 100, 50
-2,student2,pass,20,,70,,
+Roll,Name,Password,Mathematics,Physics,Chemistry,Computers,English
+1,Arpit Jain,password1234,79,80,90,100,50
+2,Stuti Sharma,pass123,67,58,70,100,96
+3,Yathansh Tewatia,password321,78,87,75,100,94
+4,Aksh Gupta,pass321,56,65,34,76,89
+5,Simarjeet Bhatia,pass001,,,,,

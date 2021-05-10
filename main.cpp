@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-vector<string> student_vector = {"roll", "name", "password", "math", "physics", "chemistry", "computer", "english"};
+vector<string> student_vector = {"Roll No.", "Name", "Password", "Mathematics", "Physics", "Chemistry", "Computers", "English"};
 
 vector<string> input(string line)
 {
@@ -63,7 +63,8 @@ public:
         str += to_string(roll);
         str += "," + name;
         string pass;
-        cout << "Enter password : ";
+        cout << "\tAssign Password to Student : ";
+        fflush(stdin);
         cin >> pass;
         str += "," + pass + ",,,,,";
         data.push_back(input(str));
@@ -93,7 +94,6 @@ public:
     {
         ifstream data1(file);
         filename = file;
-        cout << "filename:" << file << endl;
         while (data1.eof() != 1)
         {
             string o;
@@ -152,10 +152,8 @@ public:
         int i, j, row, col;
         for (i = 0; i < students.data.size(); i++)
         {
-            cout<<"inside"<<endl;
             if (students.data[i][0] == to_string(roll))
             {
-                cout<<"found rollno"<<endl;
                 for (int j = 0; j < student_vector.size(); j++)
                 {
                     if (student_vector[j] == sub_name)
@@ -177,12 +175,6 @@ public:
     void print_all_details()
     {
          int i = 0;
-        cout << "|";
-        for (; i < student_vector.size(); i++)
-        {
-            if (i != 2)
-                printf("%10s|", student_vector[i].data());
-        }
         cout << endl;
         vector<string>data1;
         ifstream s_file;
@@ -200,7 +192,7 @@ public:
         {
             if (i != 2)
             {
-                printf("%10s|",data1[i].data());
+                printf("%17s|",data1[i].data());
             }
         }
         data1.clear();
@@ -233,7 +225,7 @@ public:
         for (; i < student_vector.size(); i++)
         {
             if (i != 2)
-                printf("%10s|", student_vector[i].data());
+                printf("%17s|", student_vector[i].data());
         }
         cout << endl;
         cout << "|";
@@ -241,7 +233,7 @@ public:
         {
             if (i != 2)
             {
-                printf("%10s|", data[i].data());
+                printf("%17s|", data[i].data());
             }
         }
         cout << endl;
@@ -252,13 +244,14 @@ csv students("students.csv");
 csv teachers("teachers.csv");
 int main()
 {
-    string greeting = "\tWelcome To lorem ipsum\n\
-    1. Enter 1 if you are a teacher\n\
-    2. Enter 2 if you are a parent";
+    string greeting = "\n\n\tWelcome To Student Report Card Management System\n\
+    \t\t1. Enter 1 if you are a teacher\n\
+    \t\t2. Enter 2 if you are a parent";
     cout << greeting << endl;
     int choice;
     while (true)
     {
+        cout << "\t\t>> ";
         cin >> choice;
         if (choice == 1 || choice == 2)
         {
@@ -266,7 +259,7 @@ int main()
         }
         else
         {
-            cout << "please select from 1 or 2" << endl;
+            cout << "\tInvalid option. Please try again." << endl;
             continue;
         }
     }
@@ -286,11 +279,11 @@ int main()
         {
             try
             {
-                cout << "please enter your roll number : ";
+                cout << "\tEnter your Employee ID : ";
                 cin >> roll;
-                cout << "please enter your password : ";
+                cout << "\tEnter your Password : ";
                 cin >> password;
-                // cout<<password<<" "<<roll;
+                cout << "\n";
                 t1 = teacher(roll, password, teachers);
             }
             catch (int err)
@@ -298,8 +291,8 @@ int main()
                 if (err == 1)
                 {
                     char choice;
-                    cout << "wrong password/roll" << endl;
-                    cout << "do you want to continue?(y/n): ";
+                    cout << "\tError. Incorrect details." << endl;
+                    cout << "\tDo you want to try again?(y/n): ";
                     cin >> choice;
                     if (choice == 'n')
                     {
@@ -314,11 +307,11 @@ int main()
         }
         while (true)
         {
-            cout << "please select from the following options" << endl
-                 << "1. Add marks" << endl
-                 << "2. Add new student" << endl
-                 << "4. View all students" << endl
-                 << ">>";
+            cout << "\tSelect from the Following Options - " << endl
+                 << "\t\t1. Add marks" << endl
+                 << "\t\t2. Add new student" << endl
+                 << "\t\t3. View all students" << endl
+                 << "\t\t>> ";
             int choice;
             cin >> choice;
             switch (choice)
@@ -326,20 +319,21 @@ int main()
             case 1:
                 while (true)
                 {
-                    cout << "enter roll number :";
+                    cout << "\tEnter Roll Number :";
                     cin >> roll;
-                    cout << "enter subject name :";
+                    cout << "\tEnter Subject Name :";
                     cin >> subject_name;
-                    cout << "enter marks :";
+                    cout << "\tEnter Marks :";
                     cin >> marks;
+                    cout << endl;
                     if (marks > 100 || marks < 0)
                     {
-                        cout << "marks cannot be less than 0 or greater than 100" << endl;
+                        cout << "\tInvalid Value of Marks entered." << endl;
                         continue;
                     }
                     else if (search(student_vector, subject_name) == -1)
                     {
-                        cout << "please enter a valid subject name from the following" << endl;
+                        cout << "\tInvalid Subject Name entered." << endl;
                         for (int i = 4; i < 9; i++)
                         {
                             cout << student_vector[i] << " ";
@@ -355,21 +349,22 @@ int main()
                     {
                         if (a == 1)
                         {
-                            cout << "the roll number you entered does not exists" << endl;
+                            cout << "\tThe roll number you have entered does not exist." << endl;
                             continue;
                         }
                     }
-                    cout << "marks were added successfully" << endl;
+                    cout << "\n\tMarks were succesfully updated." << endl;
                     break;
                 }
                 break;
             case 2:
-                cout << "enter the name of the student you wish to add : ";
-                cin >> name;
+                cout << "\tEnter Name of New Student : ";
+                cin.ignore(100,'\n');
+                getline(cin, name);
                 roll = t1.add_student(name, students);
-                cout << "the roll number of the student you entered is : " << roll << endl;
+                cout << "\tAssigned Roll Number is : " << roll << endl;
                 break;
-            case 4:
+            case 3:
                 t1.print_all_details();
                 break;
             default:
@@ -386,9 +381,9 @@ int main()
         {
             try
             {
-                cout << "enter roll number : ";
+                cout << "\t\tEnter your Ward's Roll Number : ";
                 cin >> roll;
-                cout << "enter the password : ";
+                cout << "\t\tEnter your Password : ";
                 cin >> password;
                 p1 = parent(roll, password, students);
             }
@@ -396,14 +391,15 @@ int main()
             {
                 if (a == 1)
                 {
-                    cout << "roll number or password are invalid" << endl;
+                    cout << "\n\tInvalid Credentials. Try again.\n" << endl;
                     continue;
                 }
             }
             break;
         }
-        cout << "here is the report of your ward" << endl;
+        cout << "\t\t\tHere is the report of your ward" << endl;
         p1.print_report();
+        cout << endl;
         break;
     }
 }
